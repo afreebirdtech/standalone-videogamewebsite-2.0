@@ -1,110 +1,69 @@
 import React from "react";
-import logo from "./logo.svg";
+import LoginModal from './components/LoginModal/LoginModal'
+import NavBar from './components/NavBar/NavBar'
+import UnityComponent from './components/Unity/UnityComponent'
+import {Route, Switch, withRouter} from 'react-router-dom';
 import "./App.css";
+import Login from "./components/Login/Login";
 
-function App() {
-  return (
-    <div className="App">
-      <div className="webgl-content">
-        <div id="unityContainer"></div>
-        <div className="footer">
-          <div
-            className="fullscreen"
-            onclick="unityInstance.SetFullscreen(1)"
-          ></div>
-          <div className="title">Expand view</div>
-        </div>
+class App extends React.Component {
+  state = {
+    email: '',
+    password: '',
+    token: '',
+    emails: []
+  }
+  componentDidMount = () => {
+    if (!!this.state.token) {
+      this.props.history.push('/')
+    } else {
+      this.props.history.push('/login')
+    }
+  }
+
+
+
+  handleLoginSubmit = (e, userPassword) => {
+    e.preventDefault();
+    if (userPassword === 'password') {
+      this.setState({
+        password: userPassword,
+        token: this.createToken()
+      }, () => {
+        localStorage.setItem('token', this.state.token)
+        this.props.history.push('/game')
+      })
+    }
+  }
+
+  createToken = () => {
+    let tokenWord = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const length = 0;
+    const charLen = characters.length
+
+    for (let i = 0; i < length; i++) {
+      tokenWord += characters.charAt(Math.floor(Math.random() * charLen))
+    }
+    return tokenWord
+  }
+  
+  handleModalExit = () => {
+    // Handle Modal exit
+  }
+
+  render = () => {
+
+    return (
+      <div className="App">
+        <NavBar />
+        <Switch>
+          <Route path={'/login'} render={() => <Login handleLoginSubmit={this.handleLoginSubmit}/>}/>
+          <Route path={'/game'} render={() => <UnityComponent/> } />
+        </Switch>
       </div>
-
-      <div
-        nav
-        className="navbar fixed-top navbar-light navbar-expand navbar-custom "
-      >
-        <div className="container">
-          <a className="navbar-brand" href="/blog/">
-            Videogame
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div className="navbar-nav">
-              <a
-                className="nav-item nav-link"
-                href="https://www.afreebird.org/"
-              >
-                Back to AFB <span className="sr-only">(current)</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    <br/>
-    <br/>
-    <br/>
-      <div className="container">
-        <iframe
-          frameborder="0"
-          src="https://itch.io/embed-upload/2717928?color=333333"
-          allowfullscreen=""
-          height="580px"
-          width="100%"
-          
-        >
-          <a href="https://nelsonwang.itch.io/afreebird-videogame">
-            Play afreebird-videogame on itch.io
-          </a>
-        </iframe>
-        <div className="modal" id="myModal">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h4 className="modal-title">Enter Password</h4>
-                <button type="button" className="close" data-dismiss="modal">
-                  &times;
-                </button>
-              </div>
-
-              <form action="">
-                <div className="modal-body">
-                  <input
-                    id="enter_input"
-                    type="text"
-                    placeholder="Password"
-                    className="form-control"
-                  ></input>
-                  <p>
-                    <em>Use for now: afb2020</em>
-                  </p>
-                  <p>
-                    <em>Disclaimer: please don't share the password</em>
-                  </p>
-                </div>
-
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onclick="checkPassword()"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
-export default App;
+export default withRouter(App);
