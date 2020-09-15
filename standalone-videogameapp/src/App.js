@@ -5,6 +5,8 @@ import UnityComponent from './components/Unity/UnityComponent'
 import {Route, Switch, withRouter} from 'react-router-dom';
 import "./App.css";
 import Login from "./components/Login/Login";
+import firebase from './firebase'
+
 
 class App extends React.Component {
   state = {
@@ -20,11 +22,10 @@ class App extends React.Component {
       this.props.history.push('/login')
     }
   }
-
   handleLoginSubmit = (e, userPassword, userEmail) => {
     e.preventDefault();
     if (userPassword === 'password') {
-      // this.postEmailtoDb(userEmail) Need to send post req to the db
+      this.postEmailtoDb(userEmail) 
       this.setState({
         password: userPassword,
         token: this.createToken()
@@ -35,10 +36,8 @@ class App extends React.Component {
     }
   }
 
-  postEmailtoDb = (email) => {
-    db.post('emails.json', email).then( res => {
-      console.log(res)
-    })
+  postEmailtoDb = (Useremail) => {
+    firebase.database().ref('users').push({email: Useremail}).then(console.log)
   }
 
   createToken = () => {
@@ -58,7 +57,7 @@ class App extends React.Component {
   }
 
   render = () => {
-
+    
     return (
       <div className="App">
         <NavBar />
