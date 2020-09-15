@@ -53,7 +53,7 @@ function App() {
       <div className="container">
         <iframe
           frameborder="0"
-          src="https://itch.io/embed-upload/2717928?color=333333"
+          src="https://itch.io/embed-upload/2704189?color=333333"
           allowfullscreen=""
           height="580px"
           width="100%"
