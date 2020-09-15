@@ -1,5 +1,5 @@
 import React from "react";
-import LoginModal from './components/LoginModal/LoginModal'
+import db from './db'
 import NavBar from './components/NavBar/NavBar'
 import UnityComponent from './components/Unity/UnityComponent'
 import {Route, Switch, withRouter} from 'react-router-dom';
@@ -21,11 +21,10 @@ class App extends React.Component {
     }
   }
 
-
-
-  handleLoginSubmit = (e, userPassword) => {
+  handleLoginSubmit = (e, userPassword, userEmail) => {
     e.preventDefault();
     if (userPassword === 'password') {
+      // this.postEmailtoDb(userEmail) Need to send post req to the db
       this.setState({
         password: userPassword,
         token: this.createToken()
@@ -34,6 +33,12 @@ class App extends React.Component {
         this.props.history.push('/game')
       })
     }
+  }
+
+  postEmailtoDb = (email) => {
+    db.post('emails.json', email).then( res => {
+      console.log(res)
+    })
   }
 
   createToken = () => {
