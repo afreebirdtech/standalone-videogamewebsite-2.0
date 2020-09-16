@@ -1,6 +1,6 @@
 import React from "react";
 import db from './db'
-import NavBar from './components/NavBar/NavBar'
+import Nav from './components/Nav/Nav'
 import UnityComponent from './components/Unity/UnityComponent'
 import {Route, Switch, withRouter} from 'react-router-dom';
 import "./App.css";
@@ -15,6 +15,7 @@ class App extends React.Component {
     token: '',
     emails: []
   }
+
   componentDidMount = () => {
     if (!!this.state.token) {
       this.props.history.push('/')
@@ -22,6 +23,7 @@ class App extends React.Component {
       this.props.history.push('/login')
     }
   }
+
   handleLoginSubmit = (e, userPassword, userEmail) => {
     e.preventDefault();
     if (userPassword === 'password') {
@@ -60,7 +62,7 @@ class App extends React.Component {
     
     return (
       <div className="App">
-        <NavBar />
+        <Nav />
         <Switch>
           <Route path={'/login'} render={() => <Login handleLoginSubmit={this.handleLoginSubmit}/>}/>
           <Route path={'/game'} render={() => <UnityComponent/> } />
