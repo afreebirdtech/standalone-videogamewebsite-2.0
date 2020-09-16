@@ -17,8 +17,8 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
-    if (!!this.state.token) {
-      this.props.history.push('/')
+    if (!!localStorage.getItem('token')) {
+      this.props.history.push('/game')
     } else {
       this.props.history.push('/login')
     }
@@ -27,12 +27,13 @@ class App extends React.Component {
   handleLoginSubmit = (e, userPassword, userEmail) => {
     e.preventDefault();
     if (userPassword === 'password') {
-      this.postEmailtoDb(userEmail) 
+      this.postEmailtoDb(userEmail)
       this.setState({
         password: userPassword,
         token: this.createToken()
       }, () => {
         localStorage.setItem('token', this.state.token)
+        
         this.props.history.push('/game')
       })
     }
@@ -45,7 +46,7 @@ class App extends React.Component {
   createToken = () => {
     let tokenWord = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const length = 0;
+    const length = 10;
     const charLen = characters.length
 
     for (let i = 0; i < length; i++) {
@@ -53,16 +54,25 @@ class App extends React.Component {
     }
     return tokenWord
   }
+
+  handleLogOut = () => {
+    this.setState({
+      password: '',
+      token: ''
+    }, () => {
+      localStorage.clear()
+      this.props.history.push('/login')
+    })
+  }
   
   handleModalExit = () => {
     // Handle Modal exit
   }
 
   render = () => {
-    
     return (
       <div className="App">
-        <Nav />
+        <Nav token={localStorage.getItem('token')} handleLogout={this.handleLogOut}/>
         <Switch>
           <Route path={'/login'} render={() => <Login handleLoginSubmit={this.handleLoginSubmit}/>}/>
           <Route path={'/game'} render={() => <UnityComponent/> } />
