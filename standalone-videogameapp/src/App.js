@@ -26,7 +26,8 @@ class App extends React.Component {
 
   handleLoginSubmit = (e, userPassword, userEmail) => {
     e.preventDefault();
-    if (userPassword === 'password') {
+    const password = process.env.REACT_APP_SUPER_SECRET_PASSWORD
+    if (userPassword === `${password}`) {
       this.postEmailtoDb(userEmail)
       this.setState({
         password: userPassword,
@@ -39,8 +40,12 @@ class App extends React.Component {
     }
   }
 
-  postEmailtoDb = (Useremail) => {
-    firebase.database().ref('users').push({email: Useremail}).then(console.log)
+  postEmailtoDb = (userEmail) => {
+    let date = new Date(365 * 24 * 60 * 60)
+    firebase.database().ref('users').push({
+      email: userEmail,
+      date: date.toUTCString()
+    })
   }
 
   createToken = () => {

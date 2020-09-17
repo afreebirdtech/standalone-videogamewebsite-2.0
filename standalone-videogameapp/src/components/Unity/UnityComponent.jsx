@@ -1,19 +1,18 @@
 import React from 'react';
+import './UnityComponent.css'
+import ResponsiveEmbed from 'react-bootstrap/ResponsiveEmbed';
 
-const frame = '<iframe frameBorder=0 src="https://itch.io/embed-upload/2717928?color=333333" allowFullScreen="" height="580px" width="100%" '
-
-const IFrame = (props) => {
-    return (
-        <div dangerouslySetInnerHTML={ {__html: props.iframe?props.iframe: ''}} />
-    )
-};
-
-const UnityComponent = () => {
-    return (
-        <div className='unity'>
-            <iframe src="https://itch.io/embed-upload/2717928?color=333333" />
-        </div>
-    )
-};
-
+class UnityComponent extends React.Component {
+    render = () => {
+        return (
+            <ResponsiveEmbed aspectRatio='16by9' frameBorder='false'>
+                <iframe
+                    src='https://itch.io/embed-upload/2717928?color=333333'
+                    frameBorder='0'
+                    height='580px'
+                />
+            </ResponsiveEmbed>
+        )
+    }
+}
 export default UnityComponent;

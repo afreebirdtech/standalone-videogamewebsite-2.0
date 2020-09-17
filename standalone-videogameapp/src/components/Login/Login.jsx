@@ -22,7 +22,7 @@ class Login extends React.Component {
         this.setState({
             email: this.email.current.value,
             password: this.password.current.value
-        }, console.log(this.state))
+        })
     }
 
     render = () => {
