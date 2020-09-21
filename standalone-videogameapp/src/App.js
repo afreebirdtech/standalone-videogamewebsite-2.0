@@ -1,6 +1,6 @@
 import React from "react";
 import db from './db'
-import NavBar from './components/NavBar/NavBar'
+import Nav from './components/Nav/Nav'
 import UnityComponent from './components/Unity/UnityComponent'
 import {Route, Switch, withRouter} from 'react-router-dom';
 import "./App.css";
@@ -15,35 +15,43 @@ class App extends React.Component {
     token: '',
     emails: []
   }
+
   componentDidMount = () => {
-    if (!!this.state.token) {
-      this.props.history.push('/')
+    if (!!localStorage.getItem('token')) {
+      this.props.history.push('/game')
     } else {
       this.props.history.push('/login')
     }
   }
+
   handleLoginSubmit = (e, userPassword, userEmail) => {
     e.preventDefault();
-    if (userPassword === 'password') {
-      this.postEmailtoDb(userEmail) 
+    const password = process.env.REACT_APP_SUPER_SECRET_PASSWORD
+    if (userPassword === `${password}`) {
+      this.postEmailtoDb(userEmail)
       this.setState({
         password: userPassword,
         token: this.createToken()
       }, () => {
         localStorage.setItem('token', this.state.token)
+        
         this.props.history.push('/game')
       })
     }
   }
 
-  postEmailtoDb = (Useremail) => {
-    firebase.database().ref('users').push({email: Useremail}).then(console.log)
+  postEmailtoDb = (userEmail) => {
+    let date = new Date(365 * 24 * 60 * 60)
+    firebase.database().ref('users').push({
+      email: userEmail,
+      date: date.toUTCString()
+    })
   }
 
   createToken = () => {
     let tokenWord = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const length = 0;
+    const length = 10;
     const charLen = characters.length
 
     for (let i = 0; i < length; i++) {
@@ -51,16 +59,25 @@ class App extends React.Component {
     }
     return tokenWord
   }
+
+  handleLogOut = () => {
+    this.setState({
+      password: '',
+      token: ''
+    }, () => {
+      localStorage.clear()
+      this.props.history.push('/login')
+    })
+  }
   
   handleModalExit = () => {
     // Handle Modal exit
   }
 
   render = () => {
-    
     return (
       <div className="App">
-        <NavBar />
+        <Nav token={localStorage.getItem('token')} handleLogout={this.handleLogOut}/>
         <Switch>
           <Route path={'/login'} render={() => <Login handleLoginSubmit={this.handleLoginSubmit}/>}/>
           <Route path={'/game'} render={() => <UnityComponent/> } />

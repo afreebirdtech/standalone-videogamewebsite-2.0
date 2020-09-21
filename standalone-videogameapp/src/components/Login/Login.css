@@ -1,4 +1,16 @@
-form {
-    height: 50%;
-    width: 50%;
+.form-container {
+    display: flex;
+    justify-content: center;
+    margin: 30px;
+}
+
+.formbox {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 55px;
+    height: 75%;
+    width:  50%;
+    justify-content: center;
 }
