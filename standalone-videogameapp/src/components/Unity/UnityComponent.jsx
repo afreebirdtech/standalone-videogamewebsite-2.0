@@ -2,6 +2,7 @@ import React from 'react';
 import './UnityComponent.css'
 import ResponsiveEmbed from 'react-bootstrap/ResponsiveEmbed';
 
+// Component used to render an iframe using React bootstrap.
 class UnityComponent extends React.Component {
     render = () => {
         return (

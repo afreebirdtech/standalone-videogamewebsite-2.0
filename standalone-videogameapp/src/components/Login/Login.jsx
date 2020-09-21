@@ -1,12 +1,13 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button'
-import './Login.css'
+import Button from 'react-bootstrap/Button';
+import './Login.css';
 import Col from 'react-bootstrap/esm/Col';
-import Row from 'react-bootstrap/esm/Row'
+import Row from 'react-bootstrap/esm/Row';
 
+// Our component for handling login
 class Login extends React.Component {
-
+// We use Ref to integrate with React bootstrap
     constructor(props) {
         super(props);
         this.email = React.createRef()
@@ -19,6 +20,7 @@ class Login extends React.Component {
    
 
     handleChange = (event) => {
+    // We look for a change in event when entering password and email
         this.setState({
             email: this.email.current.value,
             password: this.password.current.value

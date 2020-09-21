@@ -7,7 +7,7 @@ import "./App.css";
 import Login from "./components/Login/Login";
 import firebase from './firebase'
 
-
+// Our main app! All components will load through it.
 class App extends React.Component {
   state = {
     email: '',
@@ -17,6 +17,7 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
+    // We're checking if our users browser has a token and if it does to push us to our game component.
     if (!!localStorage.getItem('token')) {
       this.props.history.push('/game')
     } else {
@@ -25,30 +26,37 @@ class App extends React.Component {
   }
 
   handleLoginSubmit = (e, userPassword, userEmail) => {
+    // This function is pushed through Logins props and allows us to check basic authentication.
     e.preventDefault();
     const password = process.env.REACT_APP_SUPER_SECRET_PASSWORD
     if (userPassword === `${password}`) {
+      // If the password matches the one in our env file ->
       this.postEmailtoDb(userEmail)
+      // send it to fire base 
       this.setState({
         password: userPassword,
         token: this.createToken()
       }, () => {
+        // Create a token for our users and set it to localstorage
         localStorage.setItem('token', this.state.token)
-        
+        // Push it to our game component
         this.props.history.push('/game')
       })
     }
   }
 
   postEmailtoDb = (userEmail) => {
+    // We're using JS Date and pushing through (YEAR, HOUR, MINUTES, SECONDS)
     let date = new Date(365 * 24 * 60 * 60)
     firebase.database().ref('users').push({
+      // Sending our firebase database the users email and date they logged in.
       email: userEmail,
       date: date.toUTCString()
     })
   }
 
   createToken = () => {
+    // This function is used to generate a random token for our users. So they dont need to log in everytime they forget to logout.
     let tokenWord = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const length = 10;
@@ -61,6 +69,7 @@ class App extends React.Component {
   }
 
   handleLogOut = () => {
+    // Handles logging out for our users.
     this.setState({
       password: '',
       token: ''

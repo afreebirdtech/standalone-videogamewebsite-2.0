@@ -4,9 +4,11 @@ import {Link} from 'react-router-dom'
 import Nav from 'react-bootstrap/Nav'
 import './Nav.css'
 
+// Our navbar 
 class NavigationBar extends Component {
 
     displayLogout = () => {
+        // This function checks for a token in localstorage and displays the correct navbar accordingly.
         if (!!this.props.token) {
             return (
                 <div>
