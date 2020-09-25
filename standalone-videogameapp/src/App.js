@@ -44,7 +44,7 @@ class App extends React.Component {
       })
     }
   }
-
+  // getEmailsfromFirebase 
   postEmailtoDb = (userEmail) => {
     // We're using JS Date and pushing through (YEAR, HOUR, MINUTES, SECONDS)
     let date = new Date(365 * 24 * 60 * 60)
