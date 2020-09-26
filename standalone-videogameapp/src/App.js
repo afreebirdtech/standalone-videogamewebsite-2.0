@@ -17,6 +17,7 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
+    this.getEmailsfromDB()
     // We're checking if our users browser has a token and if it does to push us to our game component.
     if (!!localStorage.getItem('token')) {
       this.props.history.push('/game')
@@ -25,26 +26,42 @@ class App extends React.Component {
     }
   }
 
-  handleLoginSubmit = (e, userPassword, userEmail) => {
-    // This function is pushed through Logins props and allows us to check basic authentication.
+  // handleLoginSubmit = (e, userPassword, userEmail) => {
+  //   // This function is pushed through Logins props and allows us to check basic authentication.
+  //   e.preventDefault();
+  //   const password = process.env.REACT_APP_SUPER_SECRET_PASSWORD
+  //   if (userPassword === `${password}`) {
+  //     // If the password matches the one in our env file ->
+  //     this.postEmailtoDb(userEmail)
+  //     // send it to fire base 
+  //     this.setState({
+  //       password: userPassword,
+  //       token: this.createToken()
+  //     }, () => {
+  //       // Create a token for our users and set it to localstorage
+  //       localStorage.setItem('token', this.state.token)
+  //       // Push it to our game component
+  //       this.props.history.push('/game')
+  //     })
+  //   }
+  // }
+
+
+  handleEmailSubmit = (e, userEmail) => {
     e.preventDefault();
-    const password = process.env.REACT_APP_SUPER_SECRET_PASSWORD
-    if (userPassword === `${password}`) {
-      // If the password matches the one in our env file ->
-      this.postEmailtoDb(userEmail)
-      // send it to fire base 
-      this.setState({
-        password: userPassword,
-        token: this.createToken()
-      }, () => {
-        // Create a token for our users and set it to localstorage
-        localStorage.setItem('token', this.state.token)
-        // Push it to our game component
-        this.props.history.push('/game')
+      this.state.emails.map((email) => {
+        if (email === userEmail) {
+          this.setState({
+            token: this.createToken()
+          }, () => {
+            localStorage.setItem('token', this.state.token)
+            this.props.history.push('/game')
+          })
+        }
       })
-    }
+    
   }
-  // getEmailsfromFirebase 
+  
   postEmailtoDb = (userEmail) => {
     // We're using JS Date and pushing through (YEAR, HOUR, MINUTES, SECONDS)
     let date = new Date(365 * 24 * 60 * 60)
@@ -54,6 +71,20 @@ class App extends React.Component {
       date: date.toUTCString()
     })
   }
+  getEmailsfromDB = () => {
+    let usersRef = firebase.database().ref('1q9aep58LBGxxluQybRwfSRkcBTtVZW9Ev_AjLnu6_pU');
+    usersRef.on('value', (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const child = childSnapshot.val()
+        let emails = child.map((val) => {
+          return val.email
+        })
+        this.setState({
+          emails
+        })
+      });
+    })
+  };
 
   createToken = () => {
     // This function is used to generate a random token for our users. So they dont need to log in everytime they forget to logout.
@@ -84,11 +115,12 @@ class App extends React.Component {
   }
 
   render = () => {
+    console.log(this.state)
     return (
       <div className="App">
         <Nav token={localStorage.getItem('token')} handleLogout={this.handleLogOut}/>
         <Switch>
-          <Route path={'/login'} render={() => <Login handleLoginSubmit={this.handleLoginSubmit}/>}/>
+          <Route path={'/login'} render={() => <Login handleEmailSubmit={this.handleEmailSubmit}/>}/>
           <Route path={'/game'} render={() => <UnityComponent/> } />
         </Switch>
       </div>

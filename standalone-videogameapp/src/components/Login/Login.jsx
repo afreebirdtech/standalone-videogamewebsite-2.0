@@ -11,10 +11,8 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
         this.email = React.createRef()
-        this.password = React.createRef()
         this.state = {
-            email: '',
-            password: ''
+            email: ''
         }
     }
    
@@ -22,15 +20,14 @@ class Login extends React.Component {
     handleChange = (event) => {
     // We look for a change in event when entering password and email
         this.setState({
-            email: this.email.current.value,
-            password: this.password.current.value
+            email: this.email.current.value
         })
     }
 
     render = () => {
         return (
             <div className='form-container'>
-                <Form className='formbox' onSubmit={(event) => this.props.handleLoginSubmit(event, this.state.password, this.state.email)}>
+                <Form className='formbox' onSubmit={(event) => this.props.handleEmailSubmit(event,  this.state.email)}>
                     <Form.Group as={Row} controlId='formBasicEmail'>
                         <Form.Label column sm={2}>
                             Email
@@ -39,6 +36,8 @@ class Login extends React.Component {
                             <Form.Control type='email' placeholder="Enter your email" ref={this.email} onChange={(e) => this.handleChange(e)} value={this.state.email}/>
                         </Col>
                     </Form.Group>
+                    {/*
+                        Removed password function cause why not
                     <Form.Group as={Row} controlId='formBasicPassword'>
                         <Form.Label column sm={2}>
                             Password
@@ -51,7 +50,7 @@ class Login extends React.Component {
                                 Please dont'share your password!
                             </Form.Text>
                         </Col>
-                    </Form.Group>
+                    </Form.Group> */}
                     <Col sm={12}>
                         <Button variant='primary' type='submit'>
                             Submit
