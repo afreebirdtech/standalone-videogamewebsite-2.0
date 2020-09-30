@@ -115,7 +115,6 @@ class App extends React.Component {
   }
 
   render = () => {
-    console.log(this.state)
     return (
       <div className="App">
         <Nav token={localStorage.getItem('token')} handleLogout={this.handleLogOut}/>
