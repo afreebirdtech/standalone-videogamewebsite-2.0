@@ -7,10 +7,9 @@ class UnityComponent extends React.Component {
     render = () => {
         return (
             <ResponsiveEmbed aspectRatio='16by9' frameBorder='false'>
-                <iframe
-                    src='https://itch.io/embed/755212'
-                    frameBorder='0'
-                    height='580px'
+                <iframe src='https://itch.io/embed-upload/2780119?color=333333'
+                        allowfullscreen=''
+                        width='960' height='620' frameborder='0'
                 />
             </ResponsiveEmbed>
         )
