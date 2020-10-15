@@ -14,3 +14,9 @@
     width:  50%;
     justify-content: center;
 }
+
+@media (max-width: 768px) {
+    .formbox {
+        width: 100%;
+    }
+}

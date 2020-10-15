@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import Nav from 'react-bootstrap/Nav'
 import './Nav.css'
 
+import '../../fonts/LosAndesLotaGrotesqueAlt1Regular.otf'
 // Our navbar 
 class NavigationBar extends Component {
 
@@ -28,6 +29,11 @@ class NavigationBar extends Component {
                         </Nav.Item>
                         <Nav.Item>
                             <Nav.Link as={Link} to="/logout" onClick={() => this.props.handleLogout()}>Logout</Nav.Link>
+                        </Nav.Item>
+                    </Navbar>
+                    <Navbar className='custom-nav' variant="light">
+                        <Nav.Item>
+                            AFB Video Game
                         </Nav.Item>
                     </Navbar>
             </div>
