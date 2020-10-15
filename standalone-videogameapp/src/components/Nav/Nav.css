@@ -1,3 +1,22 @@
+@font-face {
+    font-family: LotaGrotesque;
+    src: url(../../fonts/LosAndesLotaGrotesqueAlt1Regular.otf);
+}
+
+@font-face {
+    font-family: AtmaBold;
+    src: url(../../fonts/Atma-Medium.ttf);
+}
+
 .color-nav {
     background-color: yellow;
+}
+
+.custom-nav {
+    background-color: #32b8ec;
+    color: white;
+    display: flex;
+    justify-content: center;
+    font-size: 72px;
+    font-family: AtmaBold;
 }
