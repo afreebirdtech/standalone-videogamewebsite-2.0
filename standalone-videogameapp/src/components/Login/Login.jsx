@@ -41,6 +41,11 @@ class Login extends React.Component {
                                 <Col sm={10}>
                                     <Form.Control type='email' placeholder="Enter your email" ref={this.email} onChange={(e) => this.handleChange(e)} value={this.state.email} />
                                 </Col>
+                                <Col sm={0}>
+                                    <Form.Text className='text-muted'>
+                                        Please use the email you used to enroll your child!
+                                    </Form.Text>
+                                </Col>
                             </Form.Group>
                             {/*
                                 Removed password function cause why not
