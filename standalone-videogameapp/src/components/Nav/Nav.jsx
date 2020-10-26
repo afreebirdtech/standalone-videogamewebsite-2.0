@@ -23,7 +23,7 @@ class NavigationBar extends Component {
                             alt=""/>
                         </Navbar.Brand>
                         <Nav.Item>
-                            <Nav.Link href='www.afreebird.org' disabled>
+                            <Nav.Link href='https://www.afreebird.org' >
                             AFreeBird
                             </Nav.Link>
                         </Nav.Item>
