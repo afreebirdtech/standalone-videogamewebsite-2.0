@@ -1,110 +1,130 @@
 import React from "react";
-import logo from "./logo.svg";
+import db from './db'
+import Nav from './components/Nav/Nav'
+import UnityComponent from './components/Unity/UnityComponent'
+import {Route, Switch, withRouter} from 'react-router-dom';
 import "./App.css";
+import Login from "./components/Login/Login";
+import firebase from './firebase'
 
-function App() {
-  return (
-    <div className="App">
-      <div className="webgl-content">
-        <div id="unityContainer"></div>
-        <div className="footer">
-          <div
-            className="fullscreen"
-            onclick="unityInstance.SetFullscreen(1)"
-          ></div>
-          <div className="title">Expand view</div>
-        </div>
+// Our main app! All components will load through it.
+class App extends React.Component {
+  state = {
+    email: '',
+    password: '',
+    token: '',
+    emails: []
+  }
+
+  componentDidMount = () => {
+    this.getEmailsfromDB()
+    // We're checking if our users browser has a token and if it does to push us to our game component.
+    if (!!localStorage.getItem('token')) {
+      this.props.history.push('/game')
+    } else {
+      this.props.history.push('/login')
+    }
+  }
+
+  // handleLoginSubmit = (e, userPassword, userEmail) => {
+  //   // This function is pushed through Logins props and allows us to check basic authentication.
+  //   e.preventDefault();
+  //   const password = process.env.REACT_APP_SUPER_SECRET_PASSWORD
+  //   if (userPassword === `${password}`) {
+  //     // If the password matches the one in our env file ->
+  //     this.postEmailtoDb(userEmail)
+  //     // send it to fire base 
+  //     this.setState({
+  //       password: userPassword,
+  //       token: this.createToken()
+  //     }, () => {
+  //       // Create a token for our users and set it to localstorage
+  //       localStorage.setItem('token', this.state.token)
+  //       // Push it to our game component
+  //       this.props.history.push('/game')
+  //     })
+  //   }
+  // }
+
+
+  handleEmailSubmit = (e, userEmail) => {
+    e.preventDefault();
+      this.state.emails.map((email) => {
+        if (email === userEmail) {
+          this.setState({
+            token: this.createToken()
+          }, () => {
+            localStorage.setItem('token', this.state.token)
+            this.props.history.push('/game')
+          })
+        }
+      })
+    
+  }
+  
+  postEmailtoDb = (userEmail) => {
+    // We're using JS Date and pushing through (YEAR, HOUR, MINUTES, SECONDS)
+    let date = new Date(365 * 24 * 60 * 60)
+    firebase.database().ref('users').push({
+      // Sending our firebase database the users email and date they logged in.
+      email: userEmail,
+      date: date.toUTCString()
+    })
+  }
+  getEmailsfromDB = () => {
+    let usersRef = firebase.database().ref('1q9aep58LBGxxluQybRwfSRkcBTtVZW9Ev_AjLnu6_pU');
+    usersRef.on('value', (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const child = childSnapshot.val()
+        let emails = child.map((val) => {
+          return val.email
+        })
+        this.setState({
+          emails
+        })
+      });
+    })
+  };
+
+  createToken = () => {
+    // This function is used to generate a random token for our users. So they dont need to log in everytime they forget to logout.
+    let tokenWord = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const length = 10;
+    const charLen = characters.length
+
+    for (let i = 0; i < length; i++) {
+      tokenWord += characters.charAt(Math.floor(Math.random() * charLen))
+    }
+    return tokenWord
+  }
+
+  handleLogOut = () => {
+    // Handles logging out for our users.
+    this.setState({
+      password: '',
+      token: ''
+    }, () => {
+      localStorage.clear()
+      this.props.history.push('/login')
+    })
+  }
+  
+  handleModalExit = () => {
+    // Handle Modal exit
+  }
+
+  render = () => {
+    return (
+      <div className="App">
+        <Nav token={localStorage.getItem('token')} handleLogout={this.handleLogOut}/>
+        <Switch>
+          <Route path={'/login'} render={() => <Login handleEmailSubmit={this.handleEmailSubmit}/>}/>
+          <Route path={'/game'} render={() => <UnityComponent/> } />
+        </Switch>
       </div>
-
-      <div
-        nav
-        className="navbar fixed-top navbar-light navbar-expand navbar-custom "
-      >
-        <div className="container">
-          <a className="navbar-brand" href="/blog/">
-            Videogame
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div className="navbar-nav">
-              <a
-                className="nav-item nav-link"
-                href="https://www.afreebird.org/"
-              >
-                Back to AFB <span className="sr-only">(current)</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    <br/>
-    <br/>
-    <br/>
-      <div className="container">
-        <iframe
-          frameborder="0"
-          src="https://itch.io/embed-upload/2704189?color=333333"
-          allowfullscreen=""
-          height="580px"
-          width="100%"
-          
-        >
-          <a href="https://nelsonwang.itch.io/afreebird-videogame">
-            Play afreebird-videogame on itch.io
-          </a>
-        </iframe>
-        <div className="modal" id="myModal">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h4 className="modal-title">Enter Password</h4>
-                <button type="button" className="close" data-dismiss="modal">
-                  &times;
-                </button>
-              </div>
-
-              <form action="">
-                <div className="modal-body">
-                  <input
-                    id="enter_input"
-                    type="text"
-                    placeholder="Password"
-                    className="form-control"
-                  ></input>
-                  <p>
-                    <em>Use for now: afb2020</em>
-                  </p>
-                  <p>
-                    <em>Disclaimer: please don't share the password</em>
-                  </p>
-                </div>
-
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onclick="checkPassword()"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
-export default App;
+export default withRouter(App);
