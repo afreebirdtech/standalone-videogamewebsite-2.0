@@ -25,16 +25,29 @@ class Login extends React.Component {
         })
     }
 
+    getValidationState = () => {
+        let email = this.state.email
+        // Use regex to check email validation
+        const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        // Will return true if it matches the search
+        if (re.test(String(email).toLowerCase())) {
+            return 'success'
+        } 
+        if (re.test(String(email).toLowerCase()) == false) {
+            return  'error'
+        }
+        return null;
+        
+    }
+
     render = () => {
         return (
             <div className="container" style={{paddingTop:'25px'}} >
 
                 <div className='background-image' style={{backgroundImage: `url(${backgroundImage})`}}  >
 
-                    <div form-container>
-
                         <Form className='formbox' onSubmit={(event) => this.props.handleEmailSubmit(event, this.state.email)} >
-                            <Form.Group as={Row} controlId='formBasicEmail'>
+                            <Form.Group as={Row} controlId='formBasicEmail' validationState={this.getValidationState()}>
                                 <Form.Label column sm={2}>
                                     Email
                                 </Form.Label>
@@ -69,9 +82,7 @@ class Login extends React.Component {
                             </Col>
                         </Form>
 
-                    </div>  
-
-                </div>
+                </div>  
             </div>
         )
     }
