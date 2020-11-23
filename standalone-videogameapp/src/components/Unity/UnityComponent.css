@@ -1,3 +1,20 @@
 /* iframe.webform-frame > .game_frame {
     background-color: teal;
 } */
+
+.playButton {
+  background-color: yellow;
+  box-shadow: -10px 0 5px 1px darkkhaki;
+  padding: 1em 1.5rem;
+  position: relative;
+}
+
+.playButton:hover {
+  background-color: darkkhaki;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+a:link {
+  text-decoration: none;
+}
